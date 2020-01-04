@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.Backend", "AdsAgregator.Backend\AdsAgregator.Backend.csproj", "{F3108001-6997-4BA3-816B-F759AF11D5E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.Core", "AdsAgregator.Models\AdsAgregator.Core.csproj", "{488F4387-6FFF-457C-8BD2-957F3EAF7A00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F344DC29-6DF3-4365-8F67-2B089B42CB2E}
+	EndGlobalSection
+EndGlobal

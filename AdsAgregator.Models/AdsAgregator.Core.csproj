@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SearchClients\40yr5fka.0fk~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fizzler" Version="1.2.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />
+  </ItemGroup>
+
+</Project>
