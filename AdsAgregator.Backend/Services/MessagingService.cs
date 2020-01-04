@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace AdsAgregator.Backend.Services
 {
-    public class MessagingService
+    public static class MessagingService
     {
         private const string BaseFcmUrl = "https://fcm.googleapis.com/fcm/send";
-        private string _firebaseServerApiKey = "AAAAtc0y0OE:APA91bFyopTw_73HY9KatdjbGV_cYLWGtmLakga-yHeyO7kV6XPXLinpPGZ1gqQTx0MQc90O4QTkjPspm_5CcNSf0exSmUtNsnOTdUTLCAGTOP7RPkM9WXcBBFGgGr-_rEFK46I9vcUi";
+        private const string _firebaseServerApiKey = "AAAAtc0y0OE:APA91bFyopTw_73HY9KatdjbGV_cYLWGtmLakga-yHeyO7kV6XPXLinpPGZ1gqQTx0MQc90O4QTkjPspm_5CcNSf0exSmUtNsnOTdUTLCAGTOP7RPkM9WXcBBFGgGr-_rEFK46I9vcUi";
 
 
-        public async Task SendPushNotificationWithData(string title, string body,  object data, string receiver)
+        public static async Task SendPushNotificationWithData(string title, string body,  object data, string receiver)
         {
             WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
             tRequest.Method = "post";
@@ -33,8 +33,8 @@ namespace AdsAgregator.Backend.Services
                 content_available = true,
                 notification = new
                 {
-                    body = "Test",
-                    title = "Test",
+                    body = body,
+                    title = title,
                     badge = 1,
                     sound = "default"
                 },

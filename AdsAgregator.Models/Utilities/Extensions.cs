@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AdsAgregator.Core.SearchClients;
+using AdsAgregator.Core.SearchEnums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,5 +23,7 @@ namespace AdsAgregator.Core.Utilities
 
             return formatedInfo;
         }
+
+        
     }
 }
