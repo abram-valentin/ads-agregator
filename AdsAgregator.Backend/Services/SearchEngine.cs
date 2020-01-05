@@ -12,14 +12,17 @@ using System.Timers;
 
 namespace AdsAgregator.Backend.Services
 {
-    public class SearchEngine
+    public static class SearchEngine
     {
-        private Timer _timer;
+
+
+        private static SearchEngineStatus _status = SearchEngineStatus.Off;
+        private static Timer _timer;
         private const int INTERVAL = 10000;
-        public List<Search> Searches { get; set; } = new List<Search>();
+        public static List<Search> Searches { get; set; } = new List<Search>();
 
 
-        private async Task UpdateSearchList()
+        private static async Task UpdateSearchList()
         {
             var dbContext = new AppDbContext();
 
@@ -40,21 +43,25 @@ namespace AdsAgregator.Backend.Services
                 Searches.Add(new Search(item, owner));
             }
 
-            foreach (var item in Searches)
-            {
-                var searchItemToDelete = newItems.FirstOrDefault(i => i.Id == item.Searchitem.Id);
+            var itemsToRemove = Searches
+                .Where(s => searchItemsFromDb.Select(ni => ni.Id).Contains(s.Searchitem.Id) == false);
 
-                if (searchItemToDelete != null)
-                {
-                    Searches.Remove(item);
-                }
+            foreach (var item in itemsToRemove)
+            {
+                Searches.Remove(item);
             }
 
-                    
+            foreach (var item in searchItemsFromDb)
+            {
+                var itemToUpdate = Searches.FirstOrDefault(s => s.Searchitem.Id == item.Id);
+                itemToUpdate.Update(item);
+            }  
+            
         }
 
-        public async void Start()
+        public static async void Start()
         {
+            _status = SearchEngineStatus.On;
 
             await UpdateSearchList();
             await MakeSearch();
@@ -62,21 +69,27 @@ namespace AdsAgregator.Backend.Services
             _timer = new Timer(INTERVAL);
             _timer.Elapsed += OnTimerClick;
             _timer.Start();
+
         }
 
-
-        public void Stop()
+        public static void Stop()
         {
-            _timer.Stop();
+            _timer?.Stop();
+            _status = SearchEngineStatus.Off;
         }
 
-        private async void OnTimerClick(object sender, ElapsedEventArgs e)
+        public static SearchEngineStatus GetEngineStatus()
+        {
+            return _status;
+        }
+
+        private static async void OnTimerClick(object sender, ElapsedEventArgs e)
         {
             await UpdateSearchList();
             await MakeSearch();
         }
 
-        private async Task MakeSearch()
+        private static async Task MakeSearch()
         {
             var taskList = new List<Task>();
 
@@ -103,6 +116,11 @@ namespace AdsAgregator.Backend.Services
             this.Searchitem = item;
             _searchClient = ResolveSearchClient(Searchitem.Url);
             this._user = owner;
+        }
+
+        public void Update(SearchItem searchItem)
+        {
+            this.Searchitem = searchItem;
         }
 
 
@@ -146,8 +164,17 @@ namespace AdsAgregator.Backend.Services
 
 
                 Debug.WriteLine($"=======NEW CAR: {item.AdTitle} {item.PriceInfo} {item.CarInfo} =======");
-                await MessagingService.SendPushNotificationWithData("new car", $"{item.AdTitle} {item.PriceInfo}","", _user.MobileAppToken);
+
             }
+
+            for (int i = 0; i < newAds.Count; i+=3)
+            {
+                var data = newAds.Skip(i).Take(3);
+
+                await MessagingService.SendPushNotificationWithData($"({data.Count()}) нових авто. {Searchitem.Title}", Searchitem.Description, data, _user.MobileAppToken);
+            }
+
+
         }
 
         public  ISearchClient ResolveSearchClient(string url)
@@ -164,5 +191,11 @@ namespace AdsAgregator.Backend.Services
 
             return null;
         }
+    }
+
+    public enum SearchEngineStatus
+    { 
+        On = 1, 
+        Off = 2
     }
 }

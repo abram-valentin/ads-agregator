@@ -35,9 +35,6 @@ namespace AdsAgregator.Core.SearchClients
         {
             HttpClient httpClient = new HttpClient();
 
-
-            url = "https://www.ebay-kleinanzeigen.de/s-autos/c216+autos.ez_i:2009,";
-
             Uri uri = new Uri(url);
 
             var stream = await httpClient.GetStreamAsync(url);

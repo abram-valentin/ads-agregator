@@ -18,7 +18,7 @@ namespace AdsAgregator.Backend.Services
 
 
         public static async Task SendPushNotificationWithData(string title, string body,  object data, string receiver)
-        {
+      {
             WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
             tRequest.Method = "post";
             //serverKey - Key from Firebase cloud messaging server  
@@ -31,17 +31,18 @@ namespace AdsAgregator.Backend.Services
                 to = receiver,
                 priority = "high",
                 content_available = true,
+
                 notification = new
                 {
                     body = body,
                     title = title,
                     badge = 1,
-                    sound = "default"
+                    sound = "default",
+                    payload = data
                 },
                 data = new
                 {
-                    key1 = "value1",
-                    key2 = "value2"
+                    notificationPayload = data
                 }
 
             };

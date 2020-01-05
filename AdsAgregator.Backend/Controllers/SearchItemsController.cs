@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace AdsAgregator.Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class SearchItemsController : ControllerBase
     {
@@ -22,33 +22,35 @@ namespace AdsAgregator.Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromBody] int userId)
+        public IActionResult Get(int userId)
         {
             var searchItems = _dbContext
                 .SearchItems
                 .Where(si => si.OwnerId == userId);
 
-            return Ok(JsonConvert.SerializeObject(searchItems));
+            return Ok(searchItems);
         }
 
         
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] string value)
+        public async Task<IActionResult> Create(int userId, [FromForm] string value)
         {
             var item = JsonConvert.DeserializeObject<SearchItem>(value);
 
             if (item == null)
                 return StatusCode(500, "Cannot parse object");
 
+            item.OwnerId = userId;
+
             _dbContext.SearchItems.Add(item);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(JsonConvert.SerializeObject(item));
+            return Ok(item);
         }
 
        
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody] string value)
+        [HttpPut]
+        public async Task<IActionResult> Update(int userId, [FromForm] string value)
         {
             var item = JsonConvert.DeserializeObject<SearchItem>(value);
 
@@ -61,14 +63,21 @@ namespace AdsAgregator.Backend.Controllers
             if (existingItem == null)
                 return StatusCode(400, "No item for update found");
 
-            _dbContext.SearchItems.Update(item);
+            existingItem.Title = item.Title;
+            existingItem.Description = item.Description;
+            existingItem.IsActive = item.IsActive;
+            existingItem.Url = item.Url;
+            existingItem.AdSource = item.AdSource;
+
+
+            _dbContext.SearchItems.Update(existingItem);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(JsonConvert.SerializeObject(item));
+            return Ok(existingItem);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromBody] int userId, int itemId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int userId, int itemId)
         {
             var itemToDelete = await _dbContext.SearchItems.FindAsync(itemId);
 

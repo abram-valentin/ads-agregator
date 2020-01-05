@@ -9,40 +9,64 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdsAgregator.Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private AppDbContext _database{ get; set; }
-        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UserController(AppDbContext database, SignInManager<ApplicationUser> signInManager)
+        public UserController(AppDbContext database)
         {
             _database = database;
-            _signInManager = signInManager;
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Register(string username, string password, string mobileToken)
+        {
+            var user = _database
+                .Users
+                .FirstOrDefault(u => u.UserName.ToUpper() == username.ToUpper());
+
+            if (user != null)
+                return StatusCode(400, "Користувача з таким логіном вже існує");
+
+            var entity = new ApplicationUser()
+            {
+                UserName = username,
+                Password = password,
+                MobileAppToken = mobileToken
+            };
+
+            _database.Users.Add(entity);
+
+            await _database.SaveChangesAsync();
+
+            return StatusCode(201, entity);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> SignIn(string username, string password, string mobileToken)
         {
-            var result = await _signInManager.PasswordSignInAsync(username, password, true, lockoutOnFailure: false);
-            if (!result.Succeeded)
-            {
-                return StatusCode(400);
-            }
+            var user = _database
+                .Users
+                .FirstOrDefault(u => u.UserName.ToUpper() == username.ToUpper());
 
-            var user = _database.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+                return StatusCode(400, "Користувача з таким логіном немає");
 
-            bool isTokenValid = user.MobileAppToken.ToUpper() == mobileToken.ToUpper();
+            if (user.Password.ToUpper() != password.ToUpper())
+                return StatusCode(400, "Невірний пароль");
 
-            if (!isTokenValid)
+            if (user.MobileAppToken.ToUpper() != mobileToken.ToUpper())
             {
                 user.MobileAppToken = mobileToken;
                 _database.Users.Update(user);
                 await _database.SaveChangesAsync();
             }
 
-            return StatusCode(200);
+            return StatusCode(200, user);
         }
     }
 }
