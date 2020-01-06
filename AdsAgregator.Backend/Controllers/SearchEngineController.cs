@@ -27,7 +27,7 @@ namespace AdsAgregator.Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetStatus()
+        public IActionResult Status()
         {
             
             return Ok(SearchEngine.GetEngineStatus().ToString());
