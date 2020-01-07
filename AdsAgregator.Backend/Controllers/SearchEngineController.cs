@@ -8,29 +8,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdsAgregator.Backend.Controllers
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
-    public class SearchEngineController : ControllerBase
-    {
-        [HttpGet]
-        public IActionResult Start()
-        {
-            SearchEngine.Start();
-            return Ok(SearchEngine.GetEngineStatus().ToString());
-        }
+    //[Route("api/[controller]/[action]")]
+    //[ApiController]
+    //public class SearchEngineController : ControllerBase
+    //{
+    //    [HttpGet]
+    //    public IActionResult Start()
+    //    {
+    //        SearchEngine.Start();
+    //        return Ok(SearchEngine.GetEngineStatus().ToString());
+    //    }
 
-        [HttpGet]
-        public IActionResult Stop()
-        {
-            SearchEngine.Stop();
-            return Ok(SearchEngine.GetEngineStatus().ToString());
-        }
+    //    [HttpGet]
+    //    public IActionResult Stop()
+    //    {
+    //        SearchEngine.Stop();
+    //        return Ok(SearchEngine.GetEngineStatus().ToString());
+    //    }
 
-        [HttpGet]
-        public IActionResult Status()
-        {
+    //    [HttpGet]
+    //    public IActionResult Status()
+    //    {
             
-            return Ok(SearchEngine.GetEngineStatus().ToString());
-        }
-    }
+    //        return Ok(SearchEngine.GetEngineStatus().ToString());
+    //    }
+    //}
 }
