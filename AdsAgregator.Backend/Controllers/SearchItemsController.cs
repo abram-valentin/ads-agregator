@@ -33,7 +33,7 @@ namespace AdsAgregator.Backend.Controllers
 
         
         [HttpPost]
-        public async Task<IActionResult> Create(int userId, [FromForm] string value)
+        public async Task<IActionResult> Create([FromForm]int userId, [FromForm] string value)
         {
             var item = JsonConvert.DeserializeObject<SearchItem>(value);
 
@@ -49,8 +49,8 @@ namespace AdsAgregator.Backend.Controllers
         }
 
        
-        [HttpPut]
-        public async Task<IActionResult> Update(int userId, [FromForm] string value)
+        [HttpPost]
+        public async Task<IActionResult> Update([FromForm] int userId, [FromForm] string value)
         {
             var item = JsonConvert.DeserializeObject<SearchItem>(value);
 
@@ -76,8 +76,8 @@ namespace AdsAgregator.Backend.Controllers
             return Ok(existingItem);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int userId, int itemId)
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromForm] int userId, [FromForm] int itemId)
         {
             var itemToDelete = await _dbContext.SearchItems.FindAsync(itemId);
 

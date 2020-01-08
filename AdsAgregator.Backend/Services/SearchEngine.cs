@@ -1,7 +1,7 @@
 ﻿using AdsAgregator.Backend.Database;
 using AdsAgregator.Backend.Database.Tables;
+using AdsAgregator.CommonModels.Models;
 using AdsAgregator.Core.SearchClients;
-using AdsAgregator.Core.SearchModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -108,17 +108,17 @@ namespace AdsAgregator.Backend.Services
         private ISearchClient _searchClient;
         private ApplicationUser _user;
 
-        public SearchItem Searchitem { get; set; }
+        public Database.Tables.SearchItem Searchitem { get; set; }
         public List<AdModel> AdsCache { get; set; } = new List<AdModel>();
 
-        public Search(SearchItem item, ApplicationUser owner)
+        public Search(Database.Tables.SearchItem item, ApplicationUser owner)
         {
             this.Searchitem = item;
             _searchClient = ResolveSearchClient(Searchitem.Url);
             this._user = owner;
         }
 
-        public void Update(SearchItem searchItem)
+        public void Update(Database.Tables.SearchItem searchItem)
         {
             this.Searchitem = searchItem;
         }

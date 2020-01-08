@@ -1,13 +1,12 @@
-﻿using AdsAgregator.Core.SearchModels;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
-using AdsAgregator.Core.SearchEnums;
-using AdsAgregator.Core.Utilities;
 using System.IO;
+using AdsAgregator.CommonModels.Models;
+using AdsAgregator.CommonModels.Enums;
 
 namespace AdsAgregator.Core.SearchClients
 {

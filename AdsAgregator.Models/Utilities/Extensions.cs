@@ -1,10 +1,4 @@
-﻿using AdsAgregator.Core.SearchClients;
-using AdsAgregator.Core.SearchEnums;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AdsAgregator.Core.Utilities
+﻿namespace AdsAgregator.Core.Utilities
 {
     public static class Extensions
     {

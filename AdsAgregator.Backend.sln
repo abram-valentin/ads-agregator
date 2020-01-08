@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.Backend", "Ads
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.Core", "AdsAgregator.Models\AdsAgregator.Core.csproj", "{488F4387-6FFF-457C-8BD2-957F3EAF7A00}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.CommonModels", "AdsAgregator.CommonModels\AdsAgregator.CommonModels.csproj", "{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

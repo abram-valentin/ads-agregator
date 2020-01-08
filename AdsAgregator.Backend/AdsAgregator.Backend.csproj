@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdsAgregator.CommonModels\AdsAgregator.CommonModels.csproj" />
     <ProjectReference Include="..\AdsAgregator.Models\AdsAgregator.Core.csproj" />
   </ItemGroup>
 
