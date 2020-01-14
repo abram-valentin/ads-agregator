@@ -86,7 +86,14 @@ namespace AdsAgregator.Backend.Services
         private static async void OnTimerClick(object sender, ElapsedEventArgs e)
         {
             await UpdateSearchList();
-            await MakeSearch();
+            try
+            {
+                await MakeSearch();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private static async Task MakeSearch()
@@ -126,14 +133,23 @@ namespace AdsAgregator.Backend.Services
 
         public async Task ProcessSearch()
         {
-            var ads = await _searchClient.GetAds();
+            var ads = new List<AdModel>();
+            try
+            {
+                ads = await _searchClient.GetAds();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             if (ads?.Count == 0)
                 return;
 
             var newAds = ads.Where(ad =>
                 AdsCache.FirstOrDefault(item =>
-                    item.Id == ad.Id && item.AdSource == ad.AdSource) == null)
+                    item.ProviderAdId == ad.ProviderAdId && item.AdSource == ad.AdSource) == null)
                 .ToList();
 
             bool append = AdsCache.Count == 0;
@@ -155,7 +171,7 @@ namespace AdsAgregator.Backend.Services
                 if (append)
                 {
                     AdsCache.Add(item);
-                   
+
                 }
                 else
                 {
@@ -167,12 +183,13 @@ namespace AdsAgregator.Backend.Services
 
             }
 
-            for (int i = 0; i < newAds.Count; i+=3)
-            {
-                var data = newAds.Skip(i).Take(3);
+            if (newAds.Count > 0)
+            { 
+                await MessagingService.SendPushNotificationWithData($"({newAds.Count()}) нових авто. {Searchitem.Title}", Searchitem.Description, new Random().Next(1,9999999), _user.MobileAppToken);
 
-                await MessagingService.SendPushNotificationWithData($"({data.Count()}) нових авто. {Searchitem.Title}", Searchitem.Description, data, _user.MobileAppToken);
             }
+
+           
 
 
         }

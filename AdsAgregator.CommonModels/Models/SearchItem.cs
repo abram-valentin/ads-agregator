@@ -5,6 +5,11 @@ namespace AdsAgregator.CommonModels.Models
     public class SearchItem
     {
         /// <summary>
+        /// Id of search
+        /// </summary>
+        public virtual int Id { get; set; }
+
+        /// <summary>
         /// Title of search to be displayed
         /// </summary>
         public string Title { get; set; }
@@ -22,7 +27,7 @@ namespace AdsAgregator.CommonModels.Models
         /// <summary>
         /// Defines if search is in active state for now. 
         /// </summary>
-        public bool IsActive { get; set; }
+        public virtual bool IsActive { get; set; }
 
         /// <summary>
         /// Source of ad where it was get from

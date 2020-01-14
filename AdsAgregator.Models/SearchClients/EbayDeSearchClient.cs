@@ -115,7 +115,7 @@ namespace AdsAgregator.Core.SearchClients
 
             var model = new AdModel()
             {
-                Id = adId,
+                ProviderAdId = adId,
                 AdTitle = adTitle,
                 CarInfo = string.Join(" ", carInfo),
                 ImageLink = imageLink,

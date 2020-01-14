@@ -59,12 +59,35 @@ namespace AdsAgregator.Backend.Controllers
             if (user.Password.ToUpper() != password.ToUpper())
                 return StatusCode(400, "Невірний пароль");
 
+
+
             if (user.MobileAppToken.ToUpper() != mobileToken.ToUpper())
             {
                 user.MobileAppToken = mobileToken;
                 _database.Users.Update(user);
                 await _database.SaveChangesAsync();
             }
+
+            return StatusCode(200, user);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SetMobileToken(int userId, string mobileToken)
+        {
+            var user = _database
+                .Users
+                .FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+                return StatusCode(400, "Користувача з таким Id немає");
+
+            if (user.MobileAppToken?.ToUpper() != mobileToken?.ToUpper())
+            {
+                user.MobileAppToken = mobileToken ?? "";
+                _database.Users.Update(user);
+                await _database.SaveChangesAsync();
+            }
+
 
             return StatusCode(200, user);
         }

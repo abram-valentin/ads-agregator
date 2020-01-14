@@ -35,12 +35,21 @@ namespace AdsAgregator.Core.SearchClients
 
             Uri uri = new Uri(url);
 
-            var stream = await httpClient.GetStreamAsync(url);
+            string res = string.Empty;
 
-            var sr = new StreamReader(stream);
+            try
+            {
+                var stream = await httpClient.GetStreamAsync(url);
+
+                var sr = new StreamReader(stream);
 
 
-            var res = await sr.ReadToEndAsync();
+                res = await sr.ReadToEndAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             return res;
         }
@@ -106,7 +115,7 @@ namespace AdsAgregator.Core.SearchClients
 
             var model = new AdModel()
             {
-                Id = adId,
+                ProviderAdId = adId,
                 AdTitle = adTitle,
                 CarInfo = string.Join(" ", carInfo),
                 ImageLink = imageLink,

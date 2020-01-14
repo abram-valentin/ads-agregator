@@ -5,10 +5,12 @@ namespace AdsAgregator.CommonModels.Models
 {
     public class AdModel
     {
+        public virtual int Id { get; set; }
+
         /// <summary>
         /// Id of ad, got from ad provider
         /// </summary>
-        public string Id { get; set; }
+        public string ProviderAdId { get; set; }
 
         /// <summary>
         /// Title of ad

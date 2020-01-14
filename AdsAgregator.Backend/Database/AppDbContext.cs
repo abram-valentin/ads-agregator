@@ -30,6 +30,7 @@ namespace AdsAgregator.Backend.Database
             base.OnConfiguring(optionsBuilder);
         }
 
+        public DbSet<Ad> Ads { get; set; }
         public DbSet<SearchItem> SearchItems { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
 
