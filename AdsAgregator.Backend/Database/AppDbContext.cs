@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AdsAgregator.Backend.Database
 {
-    public class AppDbContext: IdentityDbContext
+    public class AppDbContext: DbContext
     {
         public IConfigurationRoot Configuration { get; set; }
 
@@ -33,6 +33,7 @@ namespace AdsAgregator.Backend.Database
         public DbSet<Ad> Ads { get; set; }
         public DbSet<SearchItem> SearchItems { get; set; }
         public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<Log> Logs { get; set; }
 
     }
 }

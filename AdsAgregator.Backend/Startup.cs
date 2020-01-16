@@ -23,6 +23,7 @@ namespace AdsAgregator.Backend
             services.AddControllers();
 
             services.AddTransient<AppDbContext>();
+            services.AddScoped<DbLogger>();
 
             
         }

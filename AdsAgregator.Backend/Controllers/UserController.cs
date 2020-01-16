@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdsAgregator.Backend.Database;
+using AdsAgregator.Backend.Database.Tables;
+using AdsAgregator.Backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +16,12 @@ namespace AdsAgregator.Backend.Controllers
     public class UserController : ControllerBase
     {
         private AppDbContext _database{ get; set; }
+        private DbLogger _dbLogger { get; set; }
 
-        public UserController(AppDbContext database)
+        public UserController(AppDbContext database, DbLogger dbLogger)
         {
             _database = database;
+            _dbLogger = dbLogger;
         }
 
 
@@ -49,22 +53,33 @@ namespace AdsAgregator.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> SignIn(string username, string password, string mobileToken)
         {
+            _dbLogger.Log("getting user from database", DateTime.Now);
+
             var user = _database
                 .Users
                 .FirstOrDefault(u => u.UserName.ToUpper() == username.ToUpper());
 
+            _dbLogger.Log("checking if user is not null", DateTime.Now);
+
             if (user == null)
                 return StatusCode(400, "Користувача з таким логіном немає");
+
+            _dbLogger.Log("checking password", DateTime.Now);
 
             if (user.Password.ToUpper() != password.ToUpper())
                 return StatusCode(400, "Невірний пароль");
 
 
+            _dbLogger.Log("checking token", DateTime.Now);
 
-            if (user.MobileAppToken.ToUpper() != mobileToken.ToUpper())
+            if (user.MobileAppToken?.ToUpper() != mobileToken?.ToUpper())
             {
+                _dbLogger.Log("updating token", DateTime.Now);
+
                 user.MobileAppToken = mobileToken;
                 _database.Users.Update(user);
+
+                _dbLogger.Log("Saving to database", DateTime.Now);
                 await _database.SaveChangesAsync();
             }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace AdsAgregator.Backend.Database
+namespace AdsAgregator.Backend.Database.Tables
 {
     public class ApplicationUser
     {
