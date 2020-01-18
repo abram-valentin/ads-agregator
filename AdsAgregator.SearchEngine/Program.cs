@@ -1,7 +1,8 @@
-﻿using AdsAgregator.Backend.Database;
-using AdsAgregator.Backend.Database.Tables;
-using AdsAgregator.CommonModels.Models;
+﻿using AdsAgregator.CommonModels.Models;
 using AdsAgregator.Core.SearchClients;
+using AdsAgregator.SearchEngine.Database;
+using AdsAgregator.SearchEngine.Database.Tables;
+using AdsAgregator.SearchEngine.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace AdsAgregator.Backend.Services
+namespace AdsAgregator.SearchEngine
 {
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.ReadLine();
+            Console.WriteLine("GO");
+            SearchEngine.Start();
+            Console.ReadLine();
+        }
+
+    }
+
     static class SearchEngine
     {
-
-
         private static SearchEngineStatus _status = SearchEngineStatus.Off;
         private static Timer _timer;
-        private const int INTERVAL = 10000;
+        private const int INTERVAL = 20000;
         public static List<Search> Searches { get; set; } = new List<Search>();
 
 
@@ -55,8 +66,8 @@ namespace AdsAgregator.Backend.Services
             {
                 var itemToUpdate = Searches.FirstOrDefault(s => s.Searchitem.Id == item.Id);
                 itemToUpdate.Update(item);
-            }  
-            
+            }
+
         }
 
         public static async void Start()
@@ -141,7 +152,9 @@ namespace AdsAgregator.Backend.Services
             }
             catch (Exception ex)
             {
-
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
             }
 
             if (ads?.Count == 0)
@@ -179,22 +192,46 @@ namespace AdsAgregator.Backend.Services
                 }
 
 
-                Debug.WriteLine($"=======NEW CAR: {item.AdTitle} {item.PriceInfo} {item.CarInfo} =======");
+                Console.WriteLine($"=======NEW CAR: {item.AdTitle} {item.PriceInfo} {item.CarInfo} =======");
+
 
             }
 
             if (newAds.Count > 0)
-            { 
-                await MessagingService.SendPushNotificationWithData($"({newAds.Count()}) нових авто. {Searchitem.Title}", Searchitem.Description, new Random().Next(1,9999999), _user.MobileAppToken);
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    foreach (var item in newAds)
+                    {
+                        dbContext.Ads.Add(new Ad 
+                        {
+                            OwnerId = _user.Id,
+                            ProviderAdId = item.ProviderAdId,
+                            AdTitle = item.AdTitle,
+                            CarInfo = item.CarInfo,
+                            ImageLink = item.ImageLink,
+                            PriceInfo = item.PriceInfo,
+                            AdSource = item.AdSource,
+                            AddressInfo = item.AddressInfo,
+                            Email = item.Email,
+                            CreatedAtInfo = item.CreatedAtInfo,
+                            Phone = item.Phone,
+                            AdLink = item.AdLink,
+                        });
+                    }
 
+                    await dbContext.SaveChangesAsync();
+                }
+
+                await MessagingService.SendPushNotificationWithData($"({newAds.Count()}) нових авто. {Searchitem.Title}", Searchitem.Description, new Random().Next(1, 9999999), _user.MobileAppToken);
             }
 
-           
+
 
 
         }
 
-        public  ISearchClient ResolveSearchClient(string url)
+        public ISearchClient ResolveSearchClient(string url)
         {
 
             if (url.Contains("m.ebay"))
@@ -211,8 +248,8 @@ namespace AdsAgregator.Backend.Services
     }
 
     public enum SearchEngineStatus
-    { 
-        On = 1, 
+    {
+        On = 1,
         Off = 2
     }
 }

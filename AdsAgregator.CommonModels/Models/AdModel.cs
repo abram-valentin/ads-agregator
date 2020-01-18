@@ -62,9 +62,5 @@ namespace AdsAgregator.CommonModels.Models
         /// </summary>
         public string AdLink { get; set; }
 
-        /// <summary>
-        /// Time ad was detected by program
-        /// </summary>
-        public TimeSpan CreatedAt_Internal { get; set; }
     }
 }

@@ -34,14 +34,26 @@ namespace AdsAgregator.Core.SearchClients
         {
             HttpClient httpClient = new HttpClient();
 
+
             Uri uri = new Uri(url);
 
-            var stream = await httpClient.GetStreamAsync(url);
+            string res = string.Empty;
 
-            var sr = new StreamReader(stream);
+            try
+            {
+                var stream = await httpClient.GetStreamAsync(url);
+
+                var sr = new StreamReader(stream);
 
 
-            var res = await sr.ReadToEndAsync();
+                res = await sr.ReadToEndAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+            }
 
             return res;
         }

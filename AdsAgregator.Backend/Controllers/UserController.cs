@@ -24,6 +24,11 @@ namespace AdsAgregator.Backend.Controllers
             _dbLogger = dbLogger;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Test()
+        {
+            return Ok();
+        }
 
         [HttpGet]
         public async Task<IActionResult> Register(string username, string password, string mobileToken)
