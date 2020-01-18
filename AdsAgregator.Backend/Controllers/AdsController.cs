@@ -33,6 +33,7 @@ namespace AdsAgregator.Backend.Controllers
             var result = await _dbContext
                 .Ads
                 .Where(a => a.OwnerId == userId && a.Id > adIdFrom)
+                .TakeLast(100)
                 .ToListAsync();
 
             return Ok(result);
