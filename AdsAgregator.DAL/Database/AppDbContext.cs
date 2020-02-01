@@ -1,14 +1,11 @@
-﻿using AdsAgregator.SearchEngine.Database.Tables;
+﻿using AdsAgregator.DAL.Database.Tables;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace AdsAgregator.SearchEngine.Database
+namespace AdsAgregator.DAL.Database
 {
-    class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         public IConfigurationRoot Configuration { get; set; }
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AdsAgregator.SearchEngine.Database.Tables
+namespace AdsAgregator.DAL.Database.Tables
 {
-    class Log
+    public class Log
     {
         public int Id { get; set; }
         public string Message { get; set; }

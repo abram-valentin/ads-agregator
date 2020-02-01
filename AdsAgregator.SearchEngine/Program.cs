@@ -17,8 +17,9 @@ namespace AdsAgregator.SearchEngine
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Ready?");
             Console.ReadLine();
-            Console.WriteLine("GO");
+            Console.WriteLine("Go");
             SearchEngine.Start();
             Console.ReadLine();
         }
@@ -29,7 +30,7 @@ namespace AdsAgregator.SearchEngine
     {
         private static SearchEngineStatus _status = SearchEngineStatus.Off;
         private static Timer _timer;
-        private const int INTERVAL = 20000;
+        private static int INTERVAL = 20000;
         public static List<Search> Searches { get; set; } = new List<Search>();
 
 
@@ -96,6 +97,9 @@ namespace AdsAgregator.SearchEngine
 
         private static async void OnTimerClick(object sender, ElapsedEventArgs e)
         {
+            _timer.Interval = new Random().Next(15000, 30000);
+            Console.WriteLine($@"\\\\\\\\\\\\\\\\\\\\\\\\ NEW INTERVAL ={_timer.Interval}");
+
             await UpdateSearchList();
             try
             {
@@ -241,6 +245,10 @@ namespace AdsAgregator.SearchEngine
             else if (url.Contains("ebay-kleinanzeigen.de"))
             {
                 return new EbayDeSearchClient() { _searchUrl = url };
+            }
+            else if (url.Contains("mobile.de"))
+            {
+                return new MobileDeSearchClient() { _searchUrl = url };
             }
 
             return null;

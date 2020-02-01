@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AdsAgregator.SearchEngine.Database.Tables
+namespace AdsAgregator.DAL.Database.Tables
 {
-    class ApplicationUser
+    public class ApplicationUser
     {
         public int Id { get; set; }
         public string UserName { get; set; }

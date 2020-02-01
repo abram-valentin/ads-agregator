@@ -1,16 +1,16 @@
-﻿using System;
+﻿using AdsAgregator.CommonModels.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace AdsAgregator.SearchEngine.Database.Tables
+namespace AdsAgregator.DAL.Database.Tables
 {
-    class SearchItem: CommonModels.Models.SearchItem
+    public class Ad: AdModel
     {
         [Key]
         public override int Id { get; set; }
-
 
         [ForeignKey("Owner")]
         public int OwnerId { get; set; }

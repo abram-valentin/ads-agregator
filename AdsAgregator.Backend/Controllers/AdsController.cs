@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdsAgregator.Backend.Database;
+using AdsAgregator.Backend.Database.Tables;
+using AdsAgregator.Backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace AdsAgregator.Backend.Controllers
 {
@@ -26,17 +29,62 @@ namespace AdsAgregator.Backend.Controllers
         /// <param name="userId">Id of user</param>
         /// <param name="adIdFrom">Id of ad from which all ads that have Id more than that considered as new</param>
         /// <returns></returns>
-        
+
         [HttpGet]
         public async Task<IActionResult> GetAds(int userId, int adIdFrom)
         {
-            var result = await _dbContext
-                .Ads
-                .Where(a => a.OwnerId == userId && a.Id > adIdFrom)
-                .TakeLast(100)
-                .ToListAsync();
+            try
+            {
+                var result = await _dbContext
+              .Ads
+              .Where(a => a.OwnerId == userId && a.Id > adIdFrom)
+              .ToListAsync();
 
-            return Ok(result);
+                if (result?.Count > 100)
+                {
+                    return Ok(result.TakeLast(100));
+                }
+
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return Ok(ex.Message);
+            }
+
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAds([FromForm] int userId, [FromForm] List<Ad> ads)
+        {
+            var addedList = new List<Ad>();
+
+            foreach (var item in ads)
+            {
+                var result = await _dbContext
+                    .Ads
+                    .Where(ad => 
+                        ad.ProviderAdId == item.ProviderAdId && ad.OwnerId == item.OwnerId && ad.AdSource == item.AdSource)
+                    .FirstOrDefaultAsync() ;
+
+                if (result is null)
+                {
+                    _dbContext.Ads.Add(item);
+                    addedList.Add(item);
+                }
+
+            }
+
+
+            new DbLogger(_dbContext).Log(JsonConvert.SerializeObject(ads), DateTime.Now);
+
+            _dbContext.SaveChanges();
+
+            return Ok();
         }
     }
 }
