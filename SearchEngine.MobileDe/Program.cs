@@ -17,6 +17,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
 
 namespace SearchEngine.MobileDe
 {
@@ -24,15 +26,36 @@ namespace SearchEngine.MobileDe
     {
         static void Main(string[] args)
         {
-            var client = new MobileDeSearchEngine();
-
-            while (true)
+            Begin:
+            try
             {
-                client
-                    .ProcessSearch()
-                    .GetAwaiter()
-                    .GetResult();
+                int counter = 0;
+
+                var client = new MobileDeSearchEngine();
+
+                while (true)
+                {
+                    client
+                        .ProcessSearch()
+                        .GetAwaiter()
+                        .GetResult();
+
+                    counter++;
+                    if (counter % 10 == 0)
+                    { 
+                        Thread.Sleep(20000);
+                        client = new MobileDeSearchEngine();
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+                goto Begin;
+            }
+           
         }
     }
 
@@ -47,7 +70,7 @@ namespace SearchEngine.MobileDe
         public MobileDeSearchEngine()
         {
             dbContext = new AppDbContext();
-            browser = new ChromeDriver();
+            browser = new FirefoxDriver();
             
         }
 
@@ -62,13 +85,28 @@ namespace SearchEngine.MobileDe
         {
             var searchItems = await GetActiveSearches();
 
+            var random = new Random();
+            var steps = random.Next(5, 50);
+
+            for (int i = 0; i < steps; i++)
+            {
+                var p1 = random.Next(0, searchItems.Count-1);
+                var p2 = random.Next(0, searchItems.Count-1);
+
+                var a = searchItems[p1];
+                var b = searchItems[p2];
+
+                searchItems[p1] = b;
+                searchItems[p2] = a;
+            }
+
+
             foreach (var item in searchItems)
             {
-                var tasks = new List<Task>();
-
+                
                 browser.Navigate().GoToUrl(item.Url);
 
-                tasks.Add(ActLikeHuman(browser));
+                var fakeHuman = Task.CompletedTask; //ActLikeHuman(browser);
                 
                 var content = browser.PageSource;
                 var resultList = await MobileDeParser.GetDataFromHtml(content);
@@ -94,15 +132,95 @@ namespace SearchEngine.MobileDe
                     });
                 }
 
-                tasks.Add(PostAds(item.OwnerId.ToString(), list));
+                var postResults = PostAds(item.OwnerId.ToString(), list);
 
-                await Task.WhenAll(tasks);
+              
+
+                if (list.Count == 0)
+                { 
+                    browser.Quit();
+
+                    if (browser.GetType() == typeof(FirefoxDriver))
+                        browser = new ChromeDriver();
+                    else
+                        browser = new FirefoxDriver();
+
+                    return;
+                }
+
+                await Task.WhenAll(fakeHuman, postResults);
+
+                browser.Quit();
+                if (browser.GetType() == typeof(FirefoxDriver))
+                    browser = new ChromeDriver();
+                else
+                    browser = new FirefoxDriver();
+
             }
 
-            for (int i = 0; i < searchItems.Count; i++)
+           
+
+        }
+
+        private async Task GetData(SearchItem searchItem)
+        {
+            IWebDriver browser;
+
+            var random = new Random().Next(1, 2);
+
+            if (random == 1)
+                browser = new ChromeDriver();
+            else
+                browser = new FirefoxDriver();
+
+          
+            browser.Navigate().GoToUrl(searchItem.Url);
+
+            var content = browser.PageSource;
+            var resultList = await MobileDeParser.GetDataFromHtml(content);
+
+            var list = new List<Ad>();
+
+            foreach (var resultItem in resultList)
             {
-                browser.Navigate().Back();
+                list.Add(new Ad
+                {
+                    OwnerId = searchItem.OwnerId,
+                    AddressInfo = resultItem.AddressInfo,
+                    AdLink = resultItem.AdLink,
+                    AdSource = resultItem.AdSource,
+                    AdTitle = resultItem.AdTitle,
+                    CarInfo = resultItem.CarInfo,
+                    CreatedAtInfo = resultItem.CreatedAtInfo,
+                    Email = resultItem.Email,
+                    ImageLink = resultItem.ImageLink,
+                    Phone = resultItem.Phone,
+                    PriceInfo = resultItem.PriceInfo,
+                    ProviderAdId = resultItem.ProviderAdId
+                });
             }
+
+            var postResults = PostAds(searchItem.OwnerId.ToString(), list);
+
+
+
+            if (list.Count == 0)
+            {
+                browser.Quit();
+
+                if (browser.GetType() == typeof(FirefoxDriver))
+                    browser = new ChromeDriver();
+                else
+                    browser = new FirefoxDriver();
+
+                return;
+            }
+
+            await Task.WhenAll(postResults);
+
+            browser.Quit();
+
+            return ;
         }
 
         private async Task<HttpStatusCode> PostAds(string userId, List<Ad> ads)
@@ -123,26 +241,37 @@ namespace SearchEngine.MobileDe
             return  response.StatusCode;
         }
 
-        private Task ActLikeHuman(IWebDriver driver)
+        private Task<bool> ActLikeHuman(IWebDriver driver)
         {
-            var random = new Random();
-
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-
-            js.ExecuteScript("var button = document.getElementById('gdpr-consent-accept-button'); if(button != null){button.click();}");
-
-            var steps = random.Next(3, 10);
-
-            for (int i = 0; i < steps; i++)
+            try
             {
-                js.ExecuteScript($"window.scroll(0, {random.Next(0, i * 1000)})");
+                var random = new Random();
 
-                Thread.Sleep(random.Next(1000, 5000));
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+
+                js.ExecuteScript("var button = document.getElementById('gdpr-consent-accept-button'); if(button != null){button.click();}");
+
+                var steps = random.Next(3, 5);
+
+                if(random.Next(1,4) % 2 ==0)
+                    js.ExecuteScript("document.getElementsByClassName('cBox--resultList')[0].click()");
+
+                for (int i = 0; i < steps; i++)
+                {
+                    js.ExecuteScript($"window.scroll(0, {random.Next(0, i * 1000)})");
+
+                    Thread.Sleep(random.Next(1000, 2000));
+                }
+
+                js.ExecuteScript("document.getElementsByClassName('cBox--resultList')[0].click()");
             }
+            catch (Exception ex)
+            {
+                return Task.FromResult(false);
+            }
+            
 
-            js.ExecuteScript("document.getElementsByClassName('cBox--resultList')[0].click()");
-
-            return Task.CompletedTask;
+            return Task.FromResult(true);
 
         }
     }

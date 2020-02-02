@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdsAgregator.Backend.Database;
-using AdsAgregator.Backend.Database.Tables;
 using AdsAgregator.Backend.Services;
-using Microsoft.AspNetCore.Http;
+using AdsAgregator.CommonModels.Models;
+using AdsAgregator.DAL.Database;
+using AdsAgregator.DAL.Database.Tables;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -59,11 +59,12 @@ namespace AdsAgregator.Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAds([FromForm] int userId, [FromForm] List<Ad> ads)
+        public async Task<IActionResult> PostAds([FromForm] int userId, [FromForm] string ads)
         {
-            var addedList = new List<Ad>();
+            var postedAds = JsonConvert.DeserializeObject<List<Ad>>(ads);
+            var addedList = new List<AdModel>();
 
-            foreach (var item in ads)
+            foreach (var item in postedAds)
             {
                 var result = await _dbContext
                     .Ads
@@ -74,15 +75,21 @@ namespace AdsAgregator.Backend.Controllers
                 if (result is null)
                 {
                     _dbContext.Ads.Add(item);
-                    addedList.Add(item);
+                    addedList.Add((AdModel)item);
                 }
 
             }
 
+            var user = await _dbContext.Users.FindAsync(userId);
 
-            new DbLogger(_dbContext).Log(JsonConvert.SerializeObject(ads), DateTime.Now);
+            if (addedList.Count == 0)
+                return Ok();
+
+            var task = MessagingService.SendPushNotificationWithData($"({addedList.Count()}) нових авто.","" ,new Random().Next(1, 9999999), user.MobileAppToken);
 
             _dbContext.SaveChanges();
+
+            await Task.WhenAll(task);
 
             return Ok();
         }

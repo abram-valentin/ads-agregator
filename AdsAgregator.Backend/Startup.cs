@@ -1,5 +1,5 @@
-using AdsAgregator.Backend.Database;
 using AdsAgregator.Backend.Services;
+using AdsAgregator.DAL.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using AdsAgregator.Backend.Database;
-using AdsAgregator.Backend.Database.Tables;
-using Microsoft.AspNetCore.Http;
+using AdsAgregator.DAL.Database;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -35,7 +31,7 @@ namespace AdsAgregator.Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm]int userId, [FromForm] string value)
         {
-            var item = JsonConvert.DeserializeObject<SearchItem>(value);
+            var item = JsonConvert.DeserializeObject<AdsAgregator.DAL.Database.Tables.SearchItem>(value);
 
             if (item == null)
                 return StatusCode(500, "Cannot parse object");
@@ -52,7 +48,7 @@ namespace AdsAgregator.Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Update([FromForm] int userId, [FromForm] string value)
         {
-            var item = JsonConvert.DeserializeObject<SearchItem>(value);
+            var item = JsonConvert.DeserializeObject<AdsAgregator.DAL.Database.Tables.SearchItem>(value);
 
             if (item == null)
                 return StatusCode(500, "Cannot parse object");

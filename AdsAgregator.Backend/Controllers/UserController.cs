@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdsAgregator.Backend.Database;
-using AdsAgregator.Backend.Database.Tables;
 using AdsAgregator.Backend.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using AdsAgregator.DAL.Database;
+using AdsAgregator.DAL.Database.Tables;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdsAgregator.Backend.Controllers

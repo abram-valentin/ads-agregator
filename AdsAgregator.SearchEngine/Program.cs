@@ -1,12 +1,11 @@
-﻿using AdsAgregator.CommonModels.Models;
+﻿using AdsAgregator.CommonModels.Enums;
+using AdsAgregator.CommonModels.Models;
 using AdsAgregator.Core.SearchClients;
-using AdsAgregator.SearchEngine.Database;
-using AdsAgregator.SearchEngine.Database.Tables;
+using AdsAgregator.DAL.Database;
 using AdsAgregator.SearchEngine.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -17,10 +16,13 @@ namespace AdsAgregator.SearchEngine
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Ready?");
-            Console.ReadLine();
-            Console.WriteLine("Go");
             SearchEngine.Start();
+            Console.ReadLine();
+            Console.ReadLine();
+            Console.ReadLine();
+            Console.ReadLine();
+            Console.ReadLine();
+            Console.ReadLine();
             Console.ReadLine();
         }
 
@@ -40,7 +42,7 @@ namespace AdsAgregator.SearchEngine
 
             var searchItemsFromDb = await dbContext
                 .SearchItems
-                .Where(s => s.IsActive == true)
+                .Where(s => s.IsActive == true && s.AdSource == AdSource.Ebay)
                 .ToListAsync();
 
 

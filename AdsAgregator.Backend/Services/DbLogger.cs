@@ -1,9 +1,6 @@
-﻿using AdsAgregator.Backend.Database;
-using AdsAgregator.Backend.Database.Tables;
+﻿using AdsAgregator.DAL.Database;
+using AdsAgregator.DAL.Database.Tables;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AdsAgregator.Backend.Services
 {

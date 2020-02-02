@@ -5,15 +5,13 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.Backend", "AdsAgregator.Backend\AdsAgregator.Backend.csproj", "{F3108001-6997-4BA3-816B-F759AF11D5E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.Core", "AdsAgregator.Models\AdsAgregator.Core.csproj", "{488F4387-6FFF-457C-8BD2-957F3EAF7A00}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.CommonModels", "AdsAgregator.CommonModels\AdsAgregator.CommonModels.csproj", "{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.SearchEngine", "AdsAgregator.SearchEngine\AdsAgregator.SearchEngine.csproj", "{AACB98E5-7ED4-4310-8DD7-4B75133DFE32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdsAgregator.DAL", "AdsAgregator.DAL\AdsAgregator.DAL.csproj", "{5BA347E2-C39F-4254-99A7-5A606B7DFC2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdsAgregator.DAL", "AdsAgregator.DAL\AdsAgregator.DAL.csproj", "{5BA347E2-C39F-4254-99A7-5A606B7DFC2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.MobileDe", "SearchEngine.MobileDe\SearchEngine.MobileDe.csproj", "{65633B25-6EE8-4E26-9ABF-53FA0FBD2839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchEngine.MobileDe", "SearchEngine.MobileDe\SearchEngine.MobileDe.csproj", "{65633B25-6EE8-4E26-9ABF-53FA0FBD2839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.EbayDe", "SearchEngine.EbayDe\SearchEngine.EbayDe.csproj", "{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,18 +23,10 @@ Global
 		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3108001-6997-4BA3-816B-F759AF11D5E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{488F4387-6FFF-457C-8BD2-957F3EAF7A00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA3151AE-B75F-45C9-9706-5FF8E7B2D28A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AACB98E5-7ED4-4310-8DD7-4B75133DFE32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AACB98E5-7ED4-4310-8DD7-4B75133DFE32}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AACB98E5-7ED4-4310-8DD7-4B75133DFE32}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AACB98E5-7ED4-4310-8DD7-4B75133DFE32}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5BA347E2-C39F-4254-99A7-5A606B7DFC2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5BA347E2-C39F-4254-99A7-5A606B7DFC2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BA347E2-C39F-4254-99A7-5A606B7DFC2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +35,10 @@ Global
 		{65633B25-6EE8-4E26-9ABF-53FA0FBD2839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65633B25-6EE8-4E26-9ABF-53FA0FBD2839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65633B25-6EE8-4E26-9ABF-53FA0FBD2839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
