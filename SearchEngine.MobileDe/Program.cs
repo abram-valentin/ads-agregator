@@ -19,6 +19,7 @@ using System.Net;
 using System.Threading;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Remote;
 
 namespace SearchEngine.MobileDe
 {
@@ -70,8 +71,12 @@ namespace SearchEngine.MobileDe
         public MobileDeSearchEngine()
         {
             dbContext = new AppDbContext();
-            browser = new FirefoxDriver();
-            
+
+            var options = new FirefoxOptions();
+            options.PageLoadStrategy = PageLoadStrategy.Eager;
+
+            browser = new FirefoxDriver(options);
+
         }
 
         private async Task<List<SearchItem>> GetActiveSearches()
@@ -106,7 +111,7 @@ namespace SearchEngine.MobileDe
                 
                 browser.Navigate().GoToUrl(item.Url);
 
-                var fakeHuman = Task.CompletedTask; //ActLikeHuman(browser);
+                //var fakeHuman = Task.CompletedTask; //ActLikeHuman(browser);
                 
                 var content = browser.PageSource;
                 var resultList = await MobileDeParser.GetDataFromHtml(content);
@@ -132,7 +137,8 @@ namespace SearchEngine.MobileDe
                     });
                 }
 
-                var postResults = PostAds(item.OwnerId.ToString(), list);
+                var postResults =
+                    PostAds(item.OwnerId.ToString(), list);
 
               
 
@@ -148,13 +154,25 @@ namespace SearchEngine.MobileDe
                     return;
                 }
 
-                await Task.WhenAll(fakeHuman, postResults);
+
+                
 
                 browser.Quit();
                 if (browser.GetType() == typeof(FirefoxDriver))
-                    browser = new ChromeDriver();
+                {
+                    var options = new ChromeOptions();
+                    options.PageLoadStrategy = PageLoadStrategy.Eager;
+                    browser = new ChromeDriver(options);
+                }
                 else
-                    browser = new FirefoxDriver();
+                {
+                    var options = new FirefoxOptions();
+                    options.PageLoadStrategy = PageLoadStrategy.Eager;
+
+                    browser = new FirefoxDriver(options);
+                }
+                   
+                await Task.WhenAll(postResults);
 
             }
 

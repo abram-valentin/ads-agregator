@@ -47,7 +47,7 @@ namespace SearchEngine.EbayDe
     static class SearchEngine
     {
         private static Timer _timer;
-        private static int INTERVAL = 20000;
+        private static int INTERVAL = 10000;
 
         public static List<Search> Searches { get; set; } = new List<Search>();
 
