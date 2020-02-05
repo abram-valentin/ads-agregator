@@ -21,7 +21,7 @@ namespace AdsAgregator.DAL.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer("Server=tcp:adsagregatorbackenddbserver.database.windows.net,1433;Initial Catalog=AdsAgregatorBackend_db;Persist Security Info=False;User ID=Valentin;Password=Valik123852456.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             base.OnConfiguring(optionsBuilder);
         }
 

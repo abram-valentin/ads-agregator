@@ -6,10 +6,12 @@ using System.Text;
 
 namespace EfficientDelivery.DAL.Database.Tables
 {
-    public class Order: EfficientDelivery.CommonModels.Order
+    public class SearchItem : EfficientDelivery.CommonModels.SearchItem
     {
         [Key]
-        public int Id { get; set; }
+        public override int Id { get; set; }
+
+
         [ForeignKey("Owner")]
         public int OwnerId { get; set; }
         public ApplicationUser Owner { get; set; }

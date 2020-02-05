@@ -1,5 +1,6 @@
 using AdsAgregator.Backend.Services;
 using AdsAgregator.DAL.Database;
+using EfficientDelivery.DAL.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace AdsAgregator.Backend
             services.AddControllers();
 
             services.AddTransient<AppDbContext>();
+            services.AddTransient<EfficientDeliveryDbContext>();
             services.AddScoped<DbLogger>();
 
             

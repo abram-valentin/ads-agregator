@@ -1,13 +1,14 @@
-﻿using EfficientDelivery.CommonModels;
-using HtmlAgilityPack;
+﻿using EfficientDelivery.DAL.Database;
+using EfficientDelivery.DAL.Database.Tables;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace EfficientDelivery.SearchEngine
 {
@@ -15,156 +16,115 @@ namespace EfficientDelivery.SearchEngine
     {
         static void Main(string[] args)
         {
-            var client = new LardiTransSearchClient();
-            client.GetOrders("https://lardi-trans.com/gruz/c640h640b64i20i46.html")
-                .GetAwaiter()
-                .GetResult();
-        }
-    }
+            Begin:
 
-    class LardiTransSearchClient
-    {
-        public async Task<int> GetOrders(string url)
-        {
-            string html = string.Empty;
+            var se = new SearchEngine();
+
             try
             {
-                html = await GetRawData(url);
+                se.Start().GetAwaiter().GetResult();
+                Console.ReadLine();
+                Console.ReadLine();
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
                 Console.ResetColor();
-                return 0;
+                Thread.Sleep(10000);
+                goto Begin;
+            }
+        }
+    }
+
+    public class SearchEngine
+    {
+        private string apiUrl = "https://adsagregatorbackend.azurewebsites.net/api/";
+
+
+        public async Task Start()
+        {
+            EfficientDeliveryDbContext dbContext = new EfficientDeliveryDbContext();
+
+            while (true)
+            {
+                DateTime startTime = DateTime.Now;
+
+                var activeSearches = await dbContext
+                    .Searches
+                    .Where(s => s.IsActive == true)
+                    .ToListAsync();
+
+                activeSearches.Add(new SearchItem()
+                { 
+                    IsActive = true, 
+                    Description = "Test description",
+                    Title = "Test title",
+                    OwnerId = 2,
+                    Url = $"https://lardi-trans.com/gruz/c640h640mi500vi6000b64i20i46p1.html",
+                });
+
+
+                var tasks = new List<Task>();
+
+                foreach (var item in activeSearches)
+                {
+                    tasks.Add(Search(item));
+                }
+
+                await Task.WhenAll(tasks);
+
+                if (DateTime.Now.Subtract(startTime).Seconds < 5)
+                {
+                    Thread.Sleep(3000);
+                }
+
+                Console.WriteLine($"++++++++++ Last request {DateTime.Now.ToLongTimeString()} ++++++++");
             }
 
-            GetDataFromHtml(html);
-
-            return 1;
         }
 
-        private List<Order> GetDataFromHtml(string html)
-        { 
-            HtmlDocument document = new HtmlDocument();
-            document.LoadHtml(html);
 
-            IEnumerable<HtmlNode> nodes =
-               document.DocumentNode.Descendants(0)
-               .Where(n => n.HasClass("ps_search-result_data-item"));
+        private async Task Search(SearchItem searchItem)
+        {
+            ISearchClient searchClient = ResolveSearchClient(searchItem.Url);
 
-            if (nodes == null | nodes.Count() == 0)
-                throw new Exception("No orders was extracted from html");
+            var orders = await searchClient.GetOrders(searchItem.Url);
 
-            var orders = new List<Order>();
+            var result = await PostAds(searchItem.OwnerId.ToString(), orders);
 
-            foreach (var item in nodes)
+            if (result != HttpStatusCode.OK)
             {
-                orders.Add(ParseOrderItem(item));
+                throw new Exception("Orders are not posted to server");
             }
-
-            return orders;
         }
 
-
-        private Order ParseOrderItem(HtmlNode node)
+        private async Task<HttpStatusCode> PostAds(string userId, List<EfficientDelivery.CommonModels.Order> orders)
         {
-            var orderId = node.Descendants(0)
-               .FirstOrDefault(n => n.ChildAttributes("data-ps-id").Count() > 0)
-               ?.GetAttributeValue("data-ps-id", null);
+            var httpClient = new HttpClient();
+            var parameters = new Dictionary<string, string>()
+                {
+                    { "userId", userId },
+                    { "ordersJson", JsonConvert.SerializeObject(orders)},
+                };
 
-            var distanceInfo = node.Descendants(0)
-                .FirstOrDefault(n => n.ChildAttributes("data-distance").Count() > 0)
-                ?.GetAttributeValue("data-distance", null);
+            var encodedContent = new FormUrlEncodedContent(parameters);
 
-            var publishDateScript = node.Descendants(0)
-                .FirstOrDefault(n =>
-                    n.Name == "script" && n.Attributes
-                        .Select(a => a.Name == "data-name" && a.Value == "localTime")?.Count() > 0)
-                .InnerHtml;
-            
-            double dateMiliseconds = 0;
-            
-            var dateMilisecondsStr = Regex.Match(publishDateScript, @"\d+").Value;
+            var response = await httpClient.PostAsync($"{apiUrl}/EfficientDelivery_Orders/PostOrders", encodedContent);
 
-            double.TryParse(dateMilisecondsStr, out dateMiliseconds);
-            
-            var publishDate = new DateTime()
-                .AddMilliseconds(dateMiliseconds);
-
-            
-            var cargoShippingDateInfo = node.Descendants(0)
-                .FirstOrDefault(n => n.HasClass("ps_data_load-date"))
-                ?.InnerHtml;
-
-            if (!string.IsNullOrWhiteSpace(cargoShippingDateInfo))
-                cargoShippingDateInfo = HttpUtility.HtmlDecode(cargoShippingDateInfo);
-
-            var transportType = node.Descendants(0)
-                .FirstOrDefault(n => n.HasClass("ps_data_transport"))
-                ?.InnerHtml;
-
-
-            var locationFrom = node.Descendants(0)
-               .FirstOrDefault(n => n.HasClass("ps_search-result_data-from"))
-               ?.InnerText.RemoveEscapes();
-
-            locationFrom = HttpUtility.HtmlDecode(locationFrom);
-
-
-            var locationTo = node.Descendants(0)
-               .FirstOrDefault(n => n.HasClass("ps_search-result_data-where"))
-               ?.InnerText.RemoveEscapes();
-            
-            locationTo = HttpUtility.HtmlDecode(locationTo);
-
-            var cargoInfo = node.Descendants(0)
-               .FirstOrDefault(n => n.HasClass("ps_data-cargo"))
-               ?.InnerText.RemoveEscapes();
-
-
-            var paymentInfo = node.Descendants(0)
-               .FirstOrDefault(n => n.HasClass("ps_data-payment"))
-               ?.InnerText.RemoveEscapes();
-
-            paymentInfo = HttpUtility.HtmlDecode(paymentInfo);
-
-
-            var orderLink = "https://lardi-trans.com/" + node.Descendants(0)
-                .FirstOrDefault(n => n.HasClass("ps_options_list__item"))
-                .GetAttributeValue("href", "");
-
-
+            var content = await response.Content.ReadAsStringAsync();
             
 
-
-            return new Order 
-            {
-                OrderId = int.Parse(orderId),
-                OrderSource = OrderSource.lardi_trans,
-                DistanceInfo = distanceInfo,
-                PublishDate = publishDate,
-                CargoShippingDateInfo = cargoShippingDateInfo,
-                TransportType = transportType,
-                LocationFrom = locationFrom,
-                LocationTo = locationTo,
-                CargoInfo = cargoInfo,
-                PaymentInfo = paymentInfo,
-                OrderLink = orderLink
-            };
+            return response.StatusCode;
         }
 
-        private async Task<string> GetRawData(string url)
+        private ISearchClient ResolveSearchClient(string url)
         {
-            HttpClient httpClient = new HttpClient( );
-            httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36");
-
-            var responce = await httpClient.GetAsync(url);
-
-            if (responce.IsSuccessStatusCode)
-                return await responce.Content.ReadAsStringAsync();
+            if (url.ToLower().Contains("lardi-trans"))
+                return new LardiTransSearchClient();
             else
-                throw new Exception("Request does not indicated success");
+                throw new Exception("No other search clients are supported yet");
         }
     }
 }
