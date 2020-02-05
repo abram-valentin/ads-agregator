@@ -13,6 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.MobileDe", "Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchEngine.EbayDe", "SearchEngine.EbayDe\SearchEngine.EbayDe.csproj", "{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfficientDelivery.CommonModels", "EfficientDelivery.CommonModels\EfficientDelivery.CommonModels.csproj", "{6299810A-99F8-487C-B189-C5D7F753355D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfficientDelivery.SearchEngine", "EfficientDelivery.SearchEngine\EfficientDelivery.SearchEngine.csproj", "{0F4E7A99-9328-4A25-928C-12BAB0A95AC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfficientDelivery.DAL", "EfficientDelivery.DAL\EfficientDelivery.DAL.csproj", "{E3BDEA54-511A-45F8-A679-54D15EBA4C16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +45,18 @@ Global
 		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB66C75A-D9BE-43D3-AC2C-3C8ABA3DF29B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6299810A-99F8-487C-B189-C5D7F753355D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6299810A-99F8-487C-B189-C5D7F753355D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6299810A-99F8-487C-B189-C5D7F753355D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6299810A-99F8-487C-B189-C5D7F753355D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F4E7A99-9328-4A25-928C-12BAB0A95AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4E7A99-9328-4A25-928C-12BAB0A95AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4E7A99-9328-4A25-928C-12BAB0A95AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4E7A99-9328-4A25-928C-12BAB0A95AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3BDEA54-511A-45F8-A679-54D15EBA4C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3BDEA54-511A-45F8-A679-54D15EBA4C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3BDEA54-511A-45F8-A679-54D15EBA4C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3BDEA54-511A-45F8-A679-54D15EBA4C16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
