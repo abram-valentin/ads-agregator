@@ -14,15 +14,14 @@ namespace AdsAgregator.Backend.Services
     public static class MessagingService
     {
         private const string BaseFcmUrl = "https://fcm.googleapis.com/fcm/send";
-        private const string _firebaseServerApiKey = "AAAAtc0y0OE:APA91bFyopTw_73HY9KatdjbGV_cYLWGtmLakga-yHeyO7kV6XPXLinpPGZ1gqQTx0MQc90O4QTkjPspm_5CcNSf0exSmUtNsnOTdUTLCAGTOP7RPkM9WXcBBFGgGr-_rEFK46I9vcUi";
 
 
-        public static async Task SendPushNotificationWithData(string title, string body, object data, string receiver)
+        public static async Task SendPushNotificationWithData(string title, string body, object data, string receiver, string _firebaseSeverApiKey)
         {
             WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
             tRequest.Method = "post";
             //serverKey - Key from Firebase cloud messaging server  
-            tRequest.Headers.Add(string.Format("Authorization: key={0}", _firebaseServerApiKey));
+            tRequest.Headers.Add(string.Format("Authorization: key={0}", _firebaseSeverApiKey));
             //Sender Id - From firebase project setting  
             tRequest.Headers.Add(string.Format("Sender: id={0}", "notificationtest-d1d18"));
             tRequest.ContentType = "application/json";

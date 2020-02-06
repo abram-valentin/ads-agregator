@@ -16,11 +16,40 @@ namespace AdsAgregator.Backend.Controllers
     public class EfficientDelivery_OrdersController : ControllerBase
     {
         public EfficientDeliveryDbContext _dbContext { get; set; }
+        private const string _firebaseServerApiKey = "AAAAIVvHwY4:APA91bGTYX799f9qndT6YN5AbQN3W4UoRZbg8lsj-FSp8s8CsyJ65nSfNzx6DTPvDLNCTmDgfrQktxktfnZP7i7anbwBOoX1FQw072bwQkVrBjK4ceLpKDHwnp_LwECbEtP05kxxl60O";
 
         public EfficientDelivery_OrdersController(EfficientDeliveryDbContext deliveryDbContext)
         {
             _dbContext = deliveryDbContext;
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrders(int userId, int adIdFrom)
+        {
+            try
+            {
+                var result = await _dbContext
+              .Orders
+              .Where(a => a.OwnerId == userId && a.Id > adIdFrom)
+              .ToListAsync();
+
+                if (result?.Count > 100)
+                {
+                    return Ok(result.TakeLast(100));
+                }
+
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> PostOrders([FromForm] int userId, [FromForm] string ordersJson)
@@ -72,7 +101,7 @@ namespace AdsAgregator.Backend.Controllers
                 if (addedOrders.Count == 0)
                     return Ok();
 
-                var task = MessagingService.SendPushNotificationWithData($"({addedOrders.Count()}) нових заявок.", "", new Random().Next(1, 9999999), user.MobileAppToken);
+                var task = MessagingService.SendPushNotificationWithData($"({addedOrders.Count()}) нових заявок.", "", new Random().Next(1, 9999999), user.MobileAppToken, _firebaseServerApiKey);
 
                 _dbContext.SaveChanges();
 

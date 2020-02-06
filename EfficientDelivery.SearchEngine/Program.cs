@@ -56,16 +56,6 @@ namespace EfficientDelivery.SearchEngine
                     .Where(s => s.IsActive == true)
                     .ToListAsync();
 
-                activeSearches.Add(new SearchItem()
-                { 
-                    IsActive = true, 
-                    Description = "Test description",
-                    Title = "Test title",
-                    OwnerId = 2,
-                    Url = $"https://lardi-trans.com/gruz/c640h640mi500vi6000b64i20i46p1.html",
-                });
-
-
                 var tasks = new List<Task>();
 
                 foreach (var item in activeSearches)

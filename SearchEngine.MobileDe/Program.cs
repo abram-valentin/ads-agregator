@@ -88,6 +88,11 @@ namespace SearchEngine.MobileDe
 
         public async Task ProcessSearch()
         {
+            try
+            {
+
+           
+
             var searchItems = await GetActiveSearches();
 
             var random = new Random();
@@ -175,71 +180,20 @@ namespace SearchEngine.MobileDe
                 await Task.WhenAll(postResults);
 
             }
+            }
+            catch (Exception ex)
+            {
 
-           
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
+                this.browser.Close();
+            }
+
 
         }
 
-        private async Task GetData(SearchItem searchItem)
-        {
-            IWebDriver browser;
-
-            var random = new Random().Next(1, 2);
-
-            if (random == 1)
-                browser = new ChromeDriver();
-            else
-                browser = new FirefoxDriver();
-
-          
-            browser.Navigate().GoToUrl(searchItem.Url);
-
-            var content = browser.PageSource;
-            var resultList = await MobileDeParser.GetDataFromHtml(content);
-
-            var list = new List<Ad>();
-
-            foreach (var resultItem in resultList)
-            {
-                list.Add(new Ad
-                {
-                    OwnerId = searchItem.OwnerId,
-                    AddressInfo = resultItem.AddressInfo,
-                    AdLink = resultItem.AdLink,
-                    AdSource = resultItem.AdSource,
-                    AdTitle = resultItem.AdTitle,
-                    CarInfo = resultItem.CarInfo,
-                    CreatedAtInfo = resultItem.CreatedAtInfo,
-                    Email = resultItem.Email,
-                    ImageLink = resultItem.ImageLink,
-                    Phone = resultItem.Phone,
-                    PriceInfo = resultItem.PriceInfo,
-                    ProviderAdId = resultItem.ProviderAdId
-                });
-            }
-
-            var postResults = PostAds(searchItem.OwnerId.ToString(), list);
-
-
-
-            if (list.Count == 0)
-            {
-                browser.Quit();
-
-                if (browser.GetType() == typeof(FirefoxDriver))
-                    browser = new ChromeDriver();
-                else
-                    browser = new FirefoxDriver();
-
-                return;
-            }
-
-            await Task.WhenAll(postResults);
-
-            browser.Quit();
-
-            return ;
-        }
+       
 
         private async Task<HttpStatusCode> PostAds(string userId, List<Ad> ads)
         {

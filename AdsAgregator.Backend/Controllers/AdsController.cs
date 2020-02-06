@@ -17,6 +17,7 @@ namespace AdsAgregator.Backend.Controllers
     public class AdsController : ControllerBase
     {
         private AppDbContext _dbContext;
+        private const string _firebaseServerApiKey = "AAAAtc0y0OE:APA91bFyopTw_73HY9KatdjbGV_cYLWGtmLakga-yHeyO7kV6XPXLinpPGZ1gqQTx0MQc90O4QTkjPspm_5CcNSf0exSmUtNsnOTdUTLCAGTOP7RPkM9WXcBBFGgGr-_rEFK46I9vcUi";
 
         public AdsController(AppDbContext dbContext)
         {
@@ -85,7 +86,7 @@ namespace AdsAgregator.Backend.Controllers
             if (addedList.Count == 0)
                 return Ok();
 
-            var task = MessagingService.SendPushNotificationWithData($"({addedList.Count()}) нових авто.","" ,new Random().Next(1, 9999999), user.MobileAppToken);
+            var task = MessagingService.SendPushNotificationWithData($"({addedList.Count()}) нових авто.","" ,new Random().Next(1, 9999999), user.MobileAppToken, _firebaseServerApiKey);
 
             _dbContext.SaveChanges();
 
