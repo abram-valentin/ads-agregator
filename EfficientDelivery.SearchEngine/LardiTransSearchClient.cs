@@ -89,11 +89,9 @@ namespace EfficientDelivery.SearchEngine
             var dateMilisecondsStr = Regex.Match(publishDateScript, @"\d+").Value;
 
             double.TryParse(dateMilisecondsStr, out dateMiliseconds);
-            
-            var publishDate = new DateTime()
-                .AddMilliseconds(dateMiliseconds);
 
-            
+            var publishDate = (new DateTime(1970, 1, 1)).AddMilliseconds(dateMiliseconds);
+
             var cargoShippingDateInfo = node.Descendants(0)
                 .FirstOrDefault(n => n.HasClass("ps_data_load-date"))
                 ?.InnerHtml.RemoveEscapes();
