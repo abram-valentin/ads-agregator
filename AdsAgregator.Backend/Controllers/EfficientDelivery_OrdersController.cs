@@ -69,6 +69,12 @@ namespace AdsAgregator.Backend.Controllers
                             ad.OrderId == item.OrderId && ad.OwnerId == userId && ad.OrderSource == item.OrderSource)
                         .FirstOrDefaultAsync();
 
+                    if (result != null)
+                    {
+                        result.PublishDate = item.PublishDate;
+                        _dbContext.Orders.Update(result);
+                    }
+
                     if (result is null)
                     {
                         var order = new EfficientDelivery.DAL.Database.Tables.Order
