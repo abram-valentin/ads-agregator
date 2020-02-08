@@ -29,15 +29,10 @@ namespace AdsAgregator.Backend.Controllers
         {
             try
             {
-                var result = await _dbContext
+                var result = _dbContext
               .Orders
-              .Where(a => a.OwnerId == userId && a.Id > adIdFrom)
-              .ToListAsync();
-
-                if (result?.Count > 100)
-                {
-                    return Ok(result.TakeLast(100));
-                }
+              .OrderByDescending(o => o.PublishDate)
+              .Take(100);
 
 
                 return Ok(result);
