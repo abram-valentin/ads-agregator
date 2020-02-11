@@ -113,6 +113,8 @@ namespace EfficientDelivery.SearchEngine
         {
             if (url.ToLower().Contains("lardi-trans"))
                 return new LardiTransSearchClient();
+            else if (url.ToLower().Contains("della.ua"))
+                return new DellaSearchClient();
             else
                 throw new Exception("No other search clients are supported yet");
         }

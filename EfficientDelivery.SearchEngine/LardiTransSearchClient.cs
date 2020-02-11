@@ -139,7 +139,7 @@ namespace EfficientDelivery.SearchEngine
 
             return new Order 
             {
-                OrderId = int.Parse(orderId),
+                OrderId = long.Parse(orderId),
                 OrderSource = OrderSource.lardi_trans,
                 DistanceInfo = distanceInfo,
                 PublishDate = publishDate,

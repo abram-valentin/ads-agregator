@@ -44,8 +44,6 @@ namespace AdsAgregator.Backend.Controllers
 
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> PostOrders([FromForm] int userId, [FromForm] string ordersJson)
         {
@@ -97,7 +95,7 @@ namespace AdsAgregator.Backend.Controllers
                 var user = await _dbContext.Users.FindAsync(userId);
 
                 if (user is null)
-                     return StatusCode(500, "user not found");
+                    return StatusCode(500, "user not found");
 
                 if (addedOrders.Count == 0)
                     return Ok();
@@ -115,7 +113,23 @@ namespace AdsAgregator.Backend.Controllers
 
                 return StatusCode(500, ex.Message);
             }
-         
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ClearSearchResults([FromForm] int userId)
+        {
+            if (await _dbContext.Users.FindAsync(userId) == null)
+                return BadRequest($"Cannot find user with id: {userId}");
+
+            var orders = _dbContext.Orders.Where(o => o.OwnerId == userId);
+
+            _dbContext.RemoveRange(orders);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(orders.Count());
+
         }
     }
 }

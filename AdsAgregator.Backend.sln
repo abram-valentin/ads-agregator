@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfficientDelivery.CommonMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfficientDelivery.SearchEngine", "EfficientDelivery.SearchEngine\EfficientDelivery.SearchEngine.csproj", "{0F4E7A99-9328-4A25-928C-12BAB0A95AC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfficientDelivery.DAL", "EfficientDelivery.DAL\EfficientDelivery.DAL.csproj", "{E3BDEA54-511A-45F8-A679-54D15EBA4C16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfficientDelivery.DAL", "EfficientDelivery.DAL\EfficientDelivery.DAL.csproj", "{E3BDEA54-511A-45F8-A679-54D15EBA4C16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

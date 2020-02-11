@@ -5,7 +5,7 @@ namespace EfficientDelivery.CommonModels
     public class Order
     {
         public virtual int Id { get; set; }
-        public int OrderId { get; set; }
+        public long OrderId { get; set; }
         public string LocationFrom { get; set; }
         public string LocationTo { get; set; }
         public string DistanceInfo { get; set; }

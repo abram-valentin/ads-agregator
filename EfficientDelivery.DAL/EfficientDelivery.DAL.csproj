@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200210052541_change order id from int to long.cs" />
+    <Compile Remove="Migrations\20200210052541_change order id from int to long.Designer.cs" />
+    <Compile Remove="Migrations\20200210052935_change order id from int to long.cs" />
+    <Compile Remove="Migrations\20200210052935_change order id from int to long.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.json" />
   </ItemGroup>
 
