@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfficientDelivery.DAL.Migrations
 {
     [DbContext(typeof(EfficientDeliveryDbContext))]
-    [Migration("20200210053135_Initial migration")]
-    partial class Initialmigration
+    [Migration("20200429184715_add log table")]
+    partial class addlogtable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -42,6 +42,24 @@ namespace EfficientDelivery.DAL.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EfficientDelivery.DAL.Database.Tables.Log", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
+                });
+
             modelBuilder.Entity("EfficientDelivery.DAL.Database.Tables.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -64,8 +82,8 @@ namespace EfficientDelivery.DAL.Migrations
                     b.Property<string>("LocationTo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("OrderLink")
                         .HasColumnType("nvarchar(max)");

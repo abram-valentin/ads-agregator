@@ -40,7 +40,7 @@ namespace EfficientDelivery.SearchEngine
 
     public class SearchEngine
     {
-        private string apiUrl = "https://adsagregatorbackend.azurewebsites.net/api/";
+        private string apiUrl = "https://ads-agregator.azurewebsites.net/api/";
 
 
         public async Task Start()

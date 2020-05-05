@@ -116,8 +116,8 @@ namespace AdsAgregator.Backend.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ClearSearchResults([FromForm] int userId)
+        [HttpGet]
+        public async Task<IActionResult> ClearSearchResults(int userId)
         {
             if (await _dbContext.Users.FindAsync(userId) == null)
                 return BadRequest($"Cannot find user with id: {userId}");

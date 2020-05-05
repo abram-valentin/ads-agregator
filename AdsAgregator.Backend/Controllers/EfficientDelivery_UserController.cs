@@ -23,7 +23,18 @@ namespace AdsAgregator.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> Test()
         {
-            return Ok();
+            try
+            {
+                _database.Logs.Add(new Log() { CreatedAt = DateTime.Now, Message = "test" });
+                await _database.SaveChangesAsync(); 
+
+            }
+            catch (Exception e)
+            {
+                return Content($"{e.Message} ||||||||||||||||| {e.InnerException.Message}");
+            }
+
+            return Content("ok");
         }
 
         [HttpGet]
@@ -54,28 +65,41 @@ namespace AdsAgregator.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> SignIn(string username, string password, string mobileToken)
         {
+            _database.Logs.Add(new Log() { CreatedAt = DateTime.Now, Message = "before login check" });
+            await _database.SaveChangesAsync();
+
             var user = _database
                 .Users
                 .FirstOrDefault(u => u.UserName.ToUpper() == username.ToUpper());
 
 
+
             if (user == null)
                 return StatusCode(400, "Користувача з таким логіном немає");
 
+            _database.Logs.Add(new Log() { CreatedAt = DateTime.Now, Message = "before password check" });
+            await _database.SaveChangesAsync();
 
             if (user.Password.ToUpper() != password.ToUpper())
                 return StatusCode(400, "Невірний пароль");
 
 
+            _database.Logs.Add(new Log() { CreatedAt = DateTime.Now, Message = "before token check" });
+            await _database.SaveChangesAsync();
 
             if (user.MobileAppToken?.ToUpper() != mobileToken?.ToUpper())
             {
+                _database.Logs.Add(new Log() { CreatedAt = DateTime.Now, Message = "before token update" });
+                await _database.SaveChangesAsync();
 
                 user.MobileAppToken = mobileToken;
                 _database.Users.Update(user);
 
                 await _database.SaveChangesAsync();
             }
+
+            _database.Logs.Add(new Log() { CreatedAt = DateTime.Now, Message = "returning success responce" });
+            await _database.SaveChangesAsync();
 
             return StatusCode(200, user);
         }
